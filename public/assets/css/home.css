@@ -1,0 +1,733 @@
+
+
+
+h3 {
+    align-items: center;
+    display: block;
+    font-size: 1.17em; 
+    font-weight: bold;
+    margin: 15px;
+}
+
+.hidden{
+    display: none;
+}
+
+form {
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+.top{
+    font-family:'Inter', Arial,sans-serif;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 20px;
+    padding-left:20px;
+    padding-top: 10px;
+    height:40px;
+    align-items: center;
+}
+
+.logout-button {
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    padding: 4px 10px;  
+    margin-right: 15px;
+    font-size: 14px;
+    height: 30px; 
+    line-height: 1; 
+}
+
+.logout-button:hover{
+    background-color: darkgray;
+}
+
+.custom-divider{
+    border:none;
+    height:2px;
+    background-color: gray;
+    margin: 5px 0;
+}
+
+       
+.goal-container {
+    display: flex;
+    align-items: center;
+    border: 2px solid black;
+    border-radius: 12px;
+    width: 95%;
+    background-color: lightgray;
+    margin-left: 30px;
+    margin-top: 10px;
+    height: 80px;
+    padding-left: 20px;
+    margin-right: 20px;
+
+}
+
+.welcome {
+    font-family: 'Inter', Arial, sans-serif;
+    padding-left: 30px;
+    font-size: 28px;
+    font-weight: 900; 
+}
+
+
+.goal-form {
+    
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 20px; 
+}
+
+
+.input-box {
+    border: none;
+    outline: none;
+    flex: 1;
+    padding: 5px 10px;
+    font-size: 30px;
+    background-color: lightgray;
+    border-radius: 20px;
+    font-weight: 650;
+}
+
+
+.input-button {
+    background-color: transparent;
+    border: none;
+    border-radius: 20px;
+    padding-right: 20px;
+    cursor: pointer;
+}
+
+.input-button:hover {
+    background-color: darkgray;
+}
+
+/*カレンダー*/
+.wrapper {
+    width: 55%;
+    background: white;
+    border: 2px solid black;
+    border-radius: 12px;
+    margin-left: 0; 
+    padding: 20px; 
+    box-sizing: border-box; 
+    position: relative; 
+    left: 30px; 
+}
+
+.header-container{
+    display:flex;
+    justify-content: left; 
+    margin-top: 10px;
+    margin-bottom: 0;
+    margin-left: 30px ;
+    width: 300px;
+    height: 50px;
+
+}
+
+.header-wrapper{
+    display: flex; 
+    width: 100%;
+    margin-right: 20px;
+}
+
+.counter-container{
+    width: 100px;
+    height: 50px;
+    margin-top: 10px;
+
+}
+
+.counter{
+    font-size: 30px;
+    font-weight: 700;
+    margin-top: 0;
+}
+
+
+.header-container .current-date {
+    font-size: 30px;
+    font-weight: 700;
+    margin-top: 0;
+}
+
+.arrow-right, .arrow-left {
+    background-color: transparent;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.arrow-left:hover, .arrow-right:hover {
+    background-color: gray;
+}
+
+.calendar {
+    padding: 10px;
+}
+
+.calendar ul {
+    display: flex;
+    list-style: none;
+    flex-wrap: wrap;
+    text-align: center;
+    padding: 0;
+    margin: 0; 
+}
+
+.calendar .days{
+    margin-bottom: 20px;
+}
+
+.calendar .weeks {
+    font-size: large;
+    font-weight: 800;
+    margin: 0;
+    padding: 10px 0;
+    box-sizing: border-box;
+    border-bottom: 1px solid gray; 
+}
+
+.calendar .days li{
+    z-index: 1;
+    cursor: pointer;
+    margin-top: 30px;
+}
+
+.calendar ul li {
+    width: calc(100% / 7); 
+    position: relative;
+}
+
+.days li.inactive{
+    color: gray;
+}
+
+.days li.active{
+    color: white;
+}
+
+.calendar .days li::before{
+    position: absolute;
+    content: "";
+    height: 40px;
+    width: 40px;
+    top: 50%;
+    left: 50%;
+    z-index: -1;
+    border-radius: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.days li:hover::before{
+    background: lightgray;
+}
+
+.days li.active::before{
+    background: darkslategray;
+}
+
+.days li.has-record::before {
+    background: orange;
+}
+
+
+/*体重とビッグ３*/
+.weight-container{
+    background-color: lightgray;
+    width: 200px;
+    height: 40px;
+    margin-left: auto;
+    margin-top: 10px;
+    margin-right: 20px;
+    border-radius: 12px;
+    box-shadow: -1px 3px 5px 3px gray
+
+}
+
+.CurWeight{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: 600;
+    margin-top: auto;
+    height: 40px;
+}
+
+.big3-container{
+    background-color: lightgray;
+    width: 200px;
+    height: 40px;
+    margin-right: 20px;
+    margin-top: 10px;
+    border-radius: 12px;
+    box-shadow: -1px 3px 5px 3px gray
+}
+
+.CurBig3{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: 600;
+    margin-top: auto;
+    height: 40px;
+}
+
+/*ログ*/
+.scrollable-container{
+    align-content:space-around;
+    border: 2px solid black;
+    width: 800px;
+    height: 100%;
+    max-height: 350px;
+    border-radius: 12px;
+    margin-left: 100px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.calendar-log-container{
+    display:flex;
+    align-items: stretch;
+    
+}
+
+.log-data{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#date-log,
+#training-log{
+    margin: 20px;
+}
+
+.menu-wrapper #exercise-name{
+    background-color:rgba(7, 96, 240, 0.721);
+    border-radius: 30px;
+    height:40px;
+    margin: 20px;
+    margin-bottom: 10px;
+    padding-left: 30px;
+    padding-top: 5px;
+    box-shadow: 0px 4px 6px rgba(0,0,0.2);
+}
+
+#exercise-name{
+    color: white;
+    background-color:rgba(60, 127, 234, 0.721);
+}
+
+.rep-wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background-color:rgba(60, 127, 234, 0.721);
+    border-radius: 15px;
+    margin: 20px;
+    padding-left: 15px;
+    color:white;
+    font-size: 18px;
+    font-weight: bold;
+    padding:10px;
+    padding-left: 30px;
+}
+.set{
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+}
+
+
+.weight, .separator, .reps {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.separator{
+    color:lightgray
+}
+
+input.edit-weight {
+    width: 40px;
+}
+
+input#exercise-name {
+    width: 450px;
+}
+input.edit-rep {
+    width: 40px;
+}
+
+.log_edit{
+    background-color: rgb(0, 0, 0);
+    color: white;
+    border:none;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    width: 90%;
+    display:block;
+    margin: 10px auto;
+}
+
+.log_cancel{
+    background-color: rgb(0, 0, 0);
+    color: white;
+    border:none;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    width: 90%;
+    display:block;
+    margin: 10px auto;
+}
+
+.log_save{
+    background-color: rgb(12, 210, 9);
+    color: white;
+    border:none;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    width: 90%;
+    margin-top: 10px;
+    display:block;
+    margin: 10px auto;
+
+
+}
+
+.log_delete{
+    background-color: rgb(240, 10, 10);
+    color: white;
+    border:none;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    width: 90%;
+    margin-top: 10px;
+    display:block;
+    margin: 10px auto;
+
+}
+
+.log_edit:hover{
+    background-color: rgb(126, 123, 123);
+    color: black;
+}
+
+.log_delete:hover{
+    background-color: rgb(226, 153, 153);
+    color: black;
+}
+
+
+/*インプットできるコンテナーの作成*/
+.input-container{
+    display:flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+
+/*トレーニングの記録できる欄*/
+/*トレーニングの部位の欄*/
+.training-container{
+    width: 90%;
+    height: 450px;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 12px;
+    border-top-left-radius: 0;
+    overflow-y: auto;
+    margin-left: 30px;
+    margin-top: 0;
+}
+
+.nav-bar{
+    width: 800px;
+    height: 60px;
+    border-radius: 12px;
+    margin-left: 30px;
+    margin-top: 30px;
+    display:flex;
+    gap: 0;
+}
+
+.nav-button{
+    background-color: white;
+    border: 2px solid black;
+    padding: 8px 16px;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 30%;
+    cursor: pointer;
+}
+
+.nav-button[data-training="chest"]{
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 0px;
+}
+
+.nav-button[data-training="shoulders"],
+.nav-button[data-training="back"],
+.nav-button[data-training="legs"]{
+    border-radius: 0;
+}
+
+
+
+.nav-button[data-training="arms"]{
+    border-top-right-radius: 12px;
+    border-bottom-left-radius: 0px;
+}
+
+.nav-button:hover{
+    background-color: rgba(66, 133, 244, 0.41);
+    color:black;
+}
+
+.nav-button.active{
+    background-color: rgba(66, 133, 244, 0.41);
+    color: white;
+}
+
+.form-container{
+    padding: 20px;
+    text-align: center;
+}
+
+#selected-training{
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+/*記録のフォーム*/
+.training-name-wrapper{
+    display:flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.deletion{
+    height: 40px;
+    width: 40px;
+    background-color: transparent;
+    border:0;
+    cursor: pointer;
+    margin-top:13px;
+}
+
+.training-details{
+    display:flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    margin: 20px 0;
+    width: 100%;
+}
+
+.set{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.set-num{
+    font-weight: bold;
+    font-size:18px;
+}
+
+.training-name-container{
+    border: 2px solid black ;
+    border-radius: 12px;
+    margin-left: 35px;
+    margin-top: 20px;
+    width: 800px;
+    background-color: rgba(66, 133, 244, 0.61) ;
+    height:50px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+}
+
+input[type="text"]{
+    font-weight: bold;
+    text-align: left;
+    width: 100%;
+    border:none;
+    background:transparent;
+    outline: none;
+    font-size: 25px;
+    margin-left: 10px;
+}
+
+.weight-rep-wrapper{
+    border: 2px solid black;
+    flex-direction: column;
+    align-items: left;
+    border-radius: 12px;
+    width:800px;
+    display:flex;
+    align-items:left;
+    padding: 0 10px;
+    margin-left: 35px;
+
+}
+
+input[type="number"]{
+    padding: 8px;
+    border: 1px solid gray;
+    border-radius: 8px;
+    font-size: 18px;
+}
+
+input[type="number"]::placeholder{
+    color:gray;
+    font-style: italic;
+}
+
+input::placeholder{
+    color:white;
+    font-style: italic;
+}
+
+.add-rep{
+    width: 100%;
+    border: 0;
+    background-color: transparent;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.add-rep:hover{
+    background-color: gray;
+}
+
+.add-set{
+    background-color: black;
+    color: white;
+    border:none;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    width: 100%;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.add-set:hover{
+    background-color: darkgray;
+}
+
+.submit-button{
+    background-color: rgba(66, 133, 244, 1);
+    color: white;
+    border:none;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.submit-button:hover{
+    background-color: rgba(66, 134, 244, 0.404);
+}
+
+/*体重入力フォーム*/
+.weight-input{
+    border: 2px solid black;
+    border-radius: 12px;
+    width: 250px;
+    height: 300px;
+    margin-left: 40px;
+}
+
+.weight-input-container{
+    border-radius: 30px;
+    border: 2px solid black;
+    height: 80px;
+    width: 170px;
+    background-color: rgba(66, 133, 244, 0.41);
+    margin: auto;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+    font-size: 30px;
+    font-weight: 600;
+}
+
+#user-weight{
+    background-color: lightgray;
+    height: 50px;
+    width: 80%;
+    border: 1px solid black;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 16px;
+    box-sizing: border-box;
+    margin-left:25px;
+    margin-top: 15px;
+}
+
+.submit-weight-button{
+    display: block;
+    margin: 20px auto 0 auto;
+    padding: 20px 40px;
+    border-radius: 12px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    border: 2px solid black;
+    background-color: rgba(66, 133, 244, 1);
+    color: white;
+    
+}
+
+.submit-weight-button:hover{
+    background-color: skyblue;
+    color: white;
+}
+h3 {
+    margin: 0;
+}
+
+
