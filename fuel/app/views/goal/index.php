@@ -97,22 +97,8 @@
         </div>
 
         <div class= "menu-wrapper">
-            <h3 id ="exercise-name"></h3>
-            <h3 id="exercise-name" data-bind="text: exercise"></h3>
-                <div class = rep-wrapper>
-                    <div class="set">
-                        <!--表示モード-->
-                        <span class ="weight" ></span> 
-                        <span class="separator" >&nbsp;&nbsp;</span>
-                        <span class ="reps" ></span>
-
-                        <!--編集モード-->
-                        <input type="number" class ="edit-weight"/> 
-                        <span class="separator" >&nbsp;&nbsp;</span>
-                        <input type="number" class ="edit-reps" />
-
-                    </div>
-             </div>
+            <h3 id ="exercise-name">筋トレ記録ログ欄</h3>
+            <h3 id="exercise-name" data-bind="text: exercise">日付を選択してください</h3>
         </div>
     <!--ボタン-->
     <button type="button" class="log_edit" >編集</button>
