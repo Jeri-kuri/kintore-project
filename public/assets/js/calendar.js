@@ -49,6 +49,7 @@ document.addEventListener("DOMContentLoaded",(event) =>{
         daysTag.innerHTML = liTag;
     
         addClickEventToDays();
+        
     }
     
     
@@ -153,7 +154,9 @@ document.addEventListener("DOMContentLoaded",(event) =>{
     };
     
     addClickEventToDays();
+    
     renderCalendar();
+    
 
     //編集ボタンが押された時に、ログを表示モードから入力欄にする
     const displayEditLog = (selectedDate,data) => {
@@ -248,48 +251,6 @@ document.addEventListener("DOMContentLoaded",(event) =>{
         
 
     };
-  // 保存ボタンが押された時に日付とトレーニングの種類を取得
-   /* document.querySelector(".log_save").addEventListener("click", (event) => {
-        let formattedDate = getFormattedDateFromDateLog();
-        let training_type = document.getElementById("training-log").innerText;
-
-        updateWorkout(formattedDate, training_type);
-
-    });
-
-    //保存ボタンで編集済みのデータをDBに保存する
-    function updateWorkout(date, training_type, training, sets){
-        if(confirm(`${date}のトレーニング記録を更新しますか？`)){
-            fetch("training/edit",{
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({
-                    date: date,
-                    type: training_type,
-                    training: training,
-                    sets: sets
-                })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Server responded with an error");
-                }
-                return response.json();
-            })
-            .then(data => {
-                if(data.status === "success"){
-                    alert("更新しました！");
-
-                }else{
-                    alert("更新に失敗しました" + data.message);
-                }
-            })
-            .catch(error => {
-                console.error("Error: ", error);
-                alert("エラーが発生しました！");
-            });
-        }
-    }*/
 
 
     // 記録のある日を数える
@@ -379,6 +340,7 @@ document.addEventListener("DOMContentLoaded",(event) =>{
     };
     
     updateBig3Max();
+    updateMonthlyCount();
 
     //削除機能
     function deleteWorkout(date) {
