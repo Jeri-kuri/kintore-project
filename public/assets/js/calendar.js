@@ -155,12 +155,14 @@ document.addEventListener("DOMContentLoaded",(event) =>{
     addClickEventToDays();
     renderCalendar();
 
-    //編集ボタン
+    //編集ボタンが押された時に、ログを表示モードから入力欄にする
     const displayEditLog = (selectedDate,data) => {
         const editButton = document.querySelector(".log_edit");
         editButton.addEventListener("click", function(){
-            const menuWrapper = document.querySelector(".menu-wrapper");
-    
+        const menuWrapper = document.querySelector(".menu-wrapper");
+        const date = getFormattedDateFromDateLog();
+        const category = document.getElementById("training-log").innerText;
+
             //初期化する
             menuWrapper.innerHTML = "";
             let logHTML = "";
@@ -175,6 +177,16 @@ document.addEventListener("DOMContentLoaded",(event) =>{
     
                 return;
             }else{
+            
+             // Formをダイナミックに作る
+            const form = document.createElement('form');
+            form.id = 'training-form';
+            form.action = "/project/public/training/update";
+            form.method = 'POST';
+
+            // menuWrapperに加える
+            menuWrapper.appendChild(form);
+
                  //同じ名前をグループ化する
                 const groupedData = data.reduce((acc,item) => {
                     if(!acc[item.name]){
@@ -183,11 +195,18 @@ document.addEventListener("DOMContentLoaded",(event) =>{
                     acc[item.name].push(item);
                     return acc;
                   },{});
-    
+            
+             let trainingIndex = 0;
             //グループごとにHTMLを生成する
             Object.keys(groupedData).forEach(name => {
+                
+                let setIndex = 0;
                  let exerciseHTML = `
-                    <input type="text" id="exercise-name" class="edit-exercise" value= ${name} />
+                    <input type="text" id="exercise-name" name="trainings[${trainingIndex}][name]" class="edit-exercise" value=${name} />
+                    <input type="hidden" name ="trainings_detail[${trainingIndex}][date]" value = "${date}" />
+                    <input type="hidden" name ="trainings_detail[${trainingIndex}][category]" value = "${category}" />
+                    <input type="hidden" name ="trainings[${trainingIndex}][date]" value = "${date}" />
+                    <input type="hidden" name ="trainings[${trainingIndex}][category]" value = "${category}" />
                     
                     <div class="rep-wrapper">
                     `;
@@ -195,26 +214,33 @@ document.addEventListener("DOMContentLoaded",(event) =>{
                 groupedData[name].forEach(set => {
                     exerciseHTML += `
                    <div class="set">
-                         <input type="number" class ="edit-weight" value="${set.weight}" /> kg
+                        <input type="number" class ="edit-weight" name="trainings_detail[${trainingIndex}][sets][${setIndex}][weight]" value= "${set.weight}" /> kg
                         <span class="separator">&nbsp;x &nbsp;</span>
-                        <input type="number" class ="edit-rep"  value="${set.reps}"  />回
+                       <input type="number" class ="edit-rep" name="trainings_detail[${trainingIndex}][sets][${setIndex}][reps]" value= "${set.reps}"  />回
                     </div> `;
     
-                   
+                   setIndex++;
                 });
                 
                 exerciseHTML += `</div>`;//rep-wrapperをとじる
-                menuWrapper.innerHTML += exerciseHTML;
-                })
+                form.innerHTML += exerciseHTML;
+                
+                trainingIndex++;
+                });
+                form.innerHTML +=
+                `
+                <hr class ="custom-divider">
+                <button type="submit" class="log_save" >保存</button>
+                 <button type="button" class="log_cancel" >キャンセル</button>
+                 <hr class ="custom-divider">
+                 `;
             }
 
             document.querySelector(".log_cancel").addEventListener("click", function() {
                 displayTrainingLog(selectedDate, data); 
             });
 
-            document.querySelector(".log_save").addEventListener("click", function () {
-                saveEditedData(selectedDate);
-            });
+            
     
 
         });
@@ -222,57 +248,48 @@ document.addEventListener("DOMContentLoaded",(event) =>{
         
 
     };
+  // 保存ボタンが押された時に日付とトレーニングの種類を取得
+   /* document.querySelector(".log_save").addEventListener("click", (event) => {
+        let formattedDate = getFormattedDateFromDateLog();
+        let training_type = document.getElementById("training-log").innerText;
 
-    const saveEditedData = (selectedDate) => {
-        const exercises = [];
-        
-        document.querySelectorAll(".menu-wrapper").forEach((exerciseGroup, exerciseIndex) => {
-            const exerciseName = exerciseGroup.querySelector("#exercise-name").value.trim();
-            const sets = [];
-    
-            exerciseGroup.querySelectorAll(".set").forEach((setDiv, setIndex) => {
-                const weight = setDiv.querySelector("#edit-weight").value;
-                const reps = setDiv.querySelector("#edit-reps").value;
+        updateWorkout(formattedDate, training_type);
 
-    
-                if (weight && reps) {
-                    sets.push({ weight, reps });
+    });
+
+    //保存ボタンで編集済みのデータをDBに保存する
+    function updateWorkout(date, training_type, training, sets){
+        if(confirm(`${date}のトレーニング記録を更新しますか？`)){
+            fetch("training/edit",{
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    date: date,
+                    type: training_type,
+                    training: training,
+                    sets: sets
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Server responded with an error");
                 }
+                return response.json();
+            })
+            .then(data => {
+                if(data.status === "success"){
+                    alert("更新しました！");
+
+                }else{
+                    alert("更新に失敗しました" + data.message);
+                }
+            })
+            .catch(error => {
+                console.error("Error: ", error);
+                alert("エラーが発生しました！");
             });
-    
-            if (exerciseName && sets.length > 0) {
-                exercises.push({ 
-                    [`trainings[${exerciseIndex}]][training_type]`]: "custom",
-                    [`trainings[${exerciseIndex}]][sets]`]: exerciseName,
-                    [`trainings_detail[${exerciseIndex}][sets]`]:sets.map((set, setIndex) => ({
-                        [`trainings_detail[${exerciseIndex}][sets][${setIndex}][weight]`]: set.weight,
-                        [`trainings_detail[${exerciseIndex}][sets][${setIndex}][reps]`]: set.reps
-                    }))
-                });
-            }
-        });
-    
-        // データをサーバーへ送信
-        fetch("training/edit", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ date: selectedDate, exercises: exercises })
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log("Server Response:", data);
-            if (data.status === "success") {
-                alert("更新しました！");
-                fetchTrainingData(selectedDate); // 更新後のデータを再取得
-            } else {
-                console.log("Data to be sent:", JSON.stringify({ date: selectedDate, exercises }, null, 2));
-                alert("更新に失敗しました：" + data.message);
-            }
-        })
-        .catch(error => console.error("Error updating training data:", error));
-    };
-    
-    
+        }
+    }*/
 
 
     // 記録のある日を数える

@@ -117,8 +117,6 @@
     <!--ボタン-->
     <button type="button" class="log_edit" >編集</button>
     <button type="button" class="log_delete" >削除</button>
-    <button type="button" class="log_save" >保存</button>
-    <button type="button" class="log_cancel" >キャンセル</button>
     </div>
 </div>
 

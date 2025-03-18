@@ -46,5 +46,6 @@ return array(
 	'login' => 'login/index',
 	'logout'  => 'login/logout',
 	'workout/delete' => 'workout/delete',
+	'/training/update' => '/training/update'
 
 );

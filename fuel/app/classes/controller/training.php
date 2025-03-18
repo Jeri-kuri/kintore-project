@@ -2,6 +2,7 @@
 
 class Controller_Training extends Controller
 {
+    //トレーニングのデータをDBに送信するための関数
     public function action_save()
     {
         if (Input::method() == 'POST') {
@@ -10,15 +11,20 @@ class Controller_Training extends Controller
 
             
             if(!empty($trainings) && is_array($trainings)){
+                //各トレーニングデーターを処理
                 foreach($trainings as $index => $training){
                     if(!empty($training['name'])) {
+                        //'exercise_type'テーブルに新しい種目を挿入する
                         list($exercise_id,) = DB::insert('exercise_type')->set(array(
                             'category' => $training['training_type'] ?? null,
                             'name' => $training['name'],
                             'created_at' => date('Y-m-d H:i:s')
                         ))->execute();
 
+
+                            //セットの情報をDBに挿入
                         if(!empty($trainings_detail[$index]['sets']) && is_array($trainings_detail[$index]['sets'])){
+                            //各セットのデータを'workout_log'テーブルに挿入する
                             foreach($trainings_detail[$index]['sets'] as $detail){
                                     DB::insert('workout_log')->set(array(
                                         'exercise_id' => $exercise_id,
@@ -37,7 +43,7 @@ class Controller_Training extends Controller
         }
     } 
     
-
+//トレーニングのデータを削除するための関数
     public function action_delete()
     {
         if(Input::method() == 'POST'){
@@ -72,59 +78,77 @@ class Controller_Training extends Controller
         return json_encode(['status' => 'error', 'message' => 'Invalid request']);
     }
 
-    public function action_edit(){
-        if (Input::method() == 'POST') {
+    public function action_update()
+    {
+        if(Input::method() == "POST"){
+            $trainings_detail = Input::post('trainings_detail');
+            $training = Input::post('trainings');
 
-            Log::debug("Received POST Data: " . json_encode(Input::post()));
-
-            $exercise_id = Input::post('exercise_id'); 
-            $exercise_name = Input::post('exercise_name');
-            $category = Input::post('category');
-            $workout_details = Input::post('workout_details'); 
-
-
-           
-            Log::debug("Searching for Exercise ID: " . $exercise_id);
-    
             
-            $exercise = DB::select()
+            foreach($training as $trainingIndex => $sets){
+                $date = $sets['date'];
+                $category = $sets['category'];
+                $exerciseName = $sets['name']; //not array
+
+
+                $exerciseTypes = DB::select('exercise_id') //array
                 ->from('exercise_type')
-                ->where('exercise_id', '=', $exercise_id)
+                ->where('created_at','=', $date)
                 ->execute()
-                ->current();
-    
-            if (!$exercise) {
-                return json_encode(['status' => 'error', 'message' => 'Exercise not found']);
-            }
-    
-           
-            DB::update('exercise_type')
-                ->set([
-                    'name' => $exercise_name,
-                    'category' => $category
-                ])
-                ->where('exercise_id', '=', $exercise_id)
+                ->as_array();
+
+
+                DB::update('exercise_type')
+                ->set(['name' => $exerciseName])
+                ->where('exercise_id',"=", $exerciseTypes[$trainingIndex])
                 ->execute();
-    
+                
+            } 
+
            
-            if (!empty($workout_details) && is_array($workout_details)) {
-                foreach ($workout_details as $workout) {
-                    if (!empty($workout['id'])) { 
-                        DB::update('workout_log')
-                            ->set([
-                                'weight' => $workout['weight'],
-                                'reps' => $workout['reps']
-                            ])
-                            ->where('id', '=', $workout['id'])
-                            ->execute();
-                    }
+            foreach($trainings_detail as $setIndex => $trainingData){
+                $date = $trainingData['date'];
+                $sets = $trainingData['sets'];
+
+                //Fetch all of the workout logs on the given date
+                $workoutLogs = DB::select('id')
+                ->from('workout_log')
+                ->where('created_at','=', $date)
+                ->execute()
+                ->as_array();
+
+
+                //get the number of the updated and ensure there is the matching number of logs and sets
+                $logCount = count($workoutLogs);
+                $setCount = count($sets);
+                $minCount = min($logCount, $setCount); //avoiding out-of-bounds issues
+
+
+                for($i = 0; $i < $minCount; $i++){
+                    $workoutLog = $workoutLogs[$i];
+                    $set = $sets[$i];
+
+                    DB::update('workout_log')
+                    ->set([
+                       'weight' => $set['weight'],
+                       'reps' =>  $set['reps']
+                   ])
+                   ->where('id', '=', $workoutLog['id'])
+                   ->execute();
+                   }
                 }
+
+                    
+                }
+                Session::set_flash('success', 'トレーニングデータの更新が完了しました！');
+                Response::redirect('weight');
+                
             }
+
+            }
+
+        
     
-            return json_encode(['status' => 'success', 'message' => 'Workout updated successfully']);
-        }
-    
-        return json_encode(['status' => 'error', 'message' => 'Invalid request']);
-    
-}
-}
+
+
+
