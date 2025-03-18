@@ -17,8 +17,6 @@ class Controller_Weight extends Controller
     // // フォームを表示し、送信を処理
     public function action_add_weight()
     {   
-        \Session::instance();
-        $user_id = \Session::get('id');
         
 
          // 最新のゴールをデータベースから取得する
@@ -31,13 +29,8 @@ class Controller_Weight extends Controller
 
 
         if (Input::method() == 'POST') {
-            \Session::instance();
+           
         
-            //ログインの時のIDを取得
-         $user_id = \Session::get('id');
-         if (!$user_id) {
-            die("Error: No user logged in. Session not set."); // Debugging step
-        }
 
             // 入力された情報を受け取る
             $weight = Input::post('user_weight');
@@ -47,7 +40,6 @@ class Controller_Weight extends Controller
             $result = DB::insert('weight')->set(array(
                 'weight' => $weight,
                 'created_date' => date('Y-m-d H:i:s'),
-                'user_id' => $user_id
             ))->execute();
             
             if ($result) {
