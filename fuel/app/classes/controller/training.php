@@ -2,10 +2,18 @@
 
 class Controller_Training extends Controller
 {
-    //トレーニングのデータをDBに送信するための関数
+    /**
+     * Summary of action_save
+     * @return void
+     * 
+     * トレーニングのデータをDBに保存する
+     * ユーザーがトレーニングを入力して送信すると実行される
+     * 'exercise_type'と'exercise_log'テーブルに情報を追加
+     */
     public function action_save()
     {
         if (Input::method() == 'POST') {
+            //フロントエンドからインプットを取得する
             $trainings = Input::post('trainings');
             $trainings_detail = Input::post('trainings_detail');
 
@@ -43,11 +51,18 @@ class Controller_Training extends Controller
         }
     } 
     
-//トレーニングのデータを削除するための関数
+    /**
+     * Summary of action_delete
+     * @return bool|string
+     * 指定された日付のトレーニングデータを削除する
+     * 該当する'workout_log'と'exercise_type'のデータを削除
+     */
     public function action_delete()
     {
         if(Input::method() == 'POST'){
             $date = Input::post('date');
+
+            //指定された日付のトレーニングデータを取得
             $workouts = DB::select('id')
             ->from('workout_log')
             ->where('created_at', 'LIKE', "$date%")
@@ -63,7 +78,7 @@ class Controller_Training extends Controller
 
 
             if(!empty($workouts) && !empty($exercisetype)){
-                
+                //種目データを削除する
                 foreach($exercisetype as $exercise){
                     DB::delete('exercise_type')
                     ->where('exercise_id','=',$exercise['exercise_id'])
@@ -78,26 +93,34 @@ class Controller_Training extends Controller
         return json_encode(['status' => 'error', 'message' => 'Invalid request']);
     }
 
+    /**
+     * Summary of action_update
+     * @return void
+     * トレーニングデータを更新する
+     * ユーザーが入力した最新のデータをデータベースに反映
+     */
     public function action_update()
     {
         if(Input::method() == "POST"){
+
+            //更新モードのログ欄からのユーザーインプット
             $trainings_detail = Input::post('trainings_detail');
             $training = Input::post('trainings');
 
-            
+            //トレーニング種目の更新
             foreach($training as $trainingIndex => $sets){
                 $date = $sets['date'];
                 $category = $sets['category'];
-                $exerciseName = $sets['name']; //not array
+                $exerciseName = $sets['name']; //一つの種目
 
-
+                //指定された日付の情報を取得
                 $exerciseTypes = DB::select('exercise_id') //array
                 ->from('exercise_type')
                 ->where('created_at','=', $date)
                 ->execute()
                 ->as_array();
 
-
+                //種目名を更新
                 DB::update('exercise_type')
                 ->set(['name' => $exerciseName])
                 ->where('exercise_id',"=", $exerciseTypes[$trainingIndex])
@@ -105,12 +128,12 @@ class Controller_Training extends Controller
                 
             } 
 
-           
+           //セット情報の更新
             foreach($trainings_detail as $setIndex => $trainingData){
                 $date = $trainingData['date'];
                 $sets = $trainingData['sets'];
 
-                //Fetch all of the workout logs on the given date
+                //指定された日付のデータを取得
                 $workoutLogs = DB::select('id')
                 ->from('workout_log')
                 ->where('created_at','=', $date)
@@ -118,7 +141,7 @@ class Controller_Training extends Controller
                 ->as_array();
 
 
-                //get the number of the updated and ensure there is the matching number of logs and sets
+                //セット数とログの数を比較して範囲を超えないようにする
                 $logCount = count($workoutLogs);
                 $setCount = count($sets);
                 $minCount = min($logCount, $setCount); //avoiding out-of-bounds issues
@@ -135,17 +158,18 @@ class Controller_Training extends Controller
                    ])
                    ->where('id', '=', $workoutLog['id'])
                    ->execute();
-                   }
                 }
+            }
 
                     
-                }
-                Session::set_flash('success', 'トレーニングデータの更新が完了しました！');
-                Response::redirect('weight');
-                
-            }
+        }
+        //更新完了メッセージ
+        Session::set_flash('success', 'トレーニングデータの更新が完了しました！');
+        Response::redirect('weight');
+    
+    }
 
-            }
+}
 
         
     

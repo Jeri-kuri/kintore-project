@@ -8,17 +8,14 @@ use Fuel\Core\DB;
 
 class Controller_Weight extends Controller
 {
-
-    public function before() {
-        parent::before();
-        \Session::instance();  // Start the session at the start of the controller
-    }
-
-    // // フォームを表示し、送信を処理
+    /**
+     * Summary of action_add_weight
+     * @return View
+     * 体重の追加フォームを表示し、送信を処理する
+     */
     public function action_add_weight()
     {   
         
-
          // 最新のゴールをデータベースから取得する
          $latest_weight = DB::select('weight')
          ->from('weight')
@@ -27,14 +24,10 @@ class Controller_Weight extends Controller
          ->execute()
          ->current();
 
-
+        //フォームが送信された時の処理
         if (Input::method() == 'POST') {
-           
-        
-
             // 入力された情報を受け取る
             $weight = Input::post('user_weight');
-            
             
             // データベースに保存する
             $result = DB::insert('weight')->set(array(
@@ -42,6 +35,7 @@ class Controller_Weight extends Controller
                 'created_date' => date('Y-m-d H:i:s'),
             ))->execute();
             
+            //成功した時のメッセージ
             if ($result) {
                 Session::set_flash('success', 'Weight added successfully.');
             } else {

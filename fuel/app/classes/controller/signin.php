@@ -4,11 +4,26 @@ use Fuel\Core\Response;
 
 class Controller_Signin extends Controller
 {
+    /**
+     * Summary of action_index
+     * @return Response
+     * 
+     * サインイン画面を表示するためのメソッド
+     * ユーザーが新規登録の時に呼ばれる
+     */
     public function action_index()
     {
         return Response::forge(View::forge('entry/signin'));
     }
 
+    /**
+     * Summary of action_create
+     * @return Response
+     * 新しいユーザーを作成するためのメソッド
+     * フォーム送信があった場合に実行ユーザー名の重複を確認する
+     * パスワードをハッシュ化してDBに保存する
+     * 登録成功時にログイン画面にリダイレクト
+     */
     public function action_create()
     {
         if(Input::method() == 'POST'){
