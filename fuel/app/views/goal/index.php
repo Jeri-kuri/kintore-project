@@ -11,8 +11,6 @@
         <?php echo Asset::js('calendar.js')?> <!--カレンダのjs-->
         <?php echo Asset::js('record.js')?> <!--記録記入欄のjs-->
         <?php echo Asset::js('training.js')?> <!--記録用のjs-->
-        <?php echo Asset::js('counter.js')?> <!--カウンタ機能のjs-->
-        <?php echo Asset::js('log_edit.js')?> <!--ログ編集用のjs-->
     </head>
     <body>  
         <!--　ページのヘッダー　-->

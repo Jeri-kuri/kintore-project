@@ -44,7 +44,8 @@ document.addEventListener("DOMContentLoaded",(event) =>{
         for(let i = lastDayofMonth; i < 6; i++){
             liTag += `<li class="inactive">${i - lastDayofMonth + 1 }</li>`;
         }
-    
+        
+        //日付を表示させる
         currentDate.innerText = `${months[currMonth]} ${currYear}`;
         daysTag.innerHTML = liTag;
     
@@ -57,11 +58,12 @@ document.addEventListener("DOMContentLoaded",(event) =>{
     const addClickEventToDays = () => {
         document.querySelectorAll(".days li").forEach(day => {
             day.addEventListener("click", () => {
+                //前後の月の日を選択できないようにする
                 if (!day.classList.contains("inactive")) {
                     let selectedDay = day.innerText.padStart(2, '0'); 
                     let formattedDate = `${new Date().getFullYear()}-${(currMonth + 1).toString().padStart(2, '0')}-${selectedDay}`;
-                
 
+                    //日付が選択されたら、ログ欄に選択された日付を表示させる
                     document.getElementById("date-log").innerText = `${months[currMonth]}${selectedDay}日`;
                     fetchTrainingData(formattedDate);//選択日で情報を取得
                     console.log(formattedDate);
@@ -90,10 +92,12 @@ document.addEventListener("DOMContentLoaded",(event) =>{
         
 
         if (data.length > 0) {
+            //トレーニングの種類を取得し、ログ欄に表示させる
             document.getElementById("training-log").innerText = `${data[0].category}トレ`;
             displayTrainingLog(selectedDate,data);
             displayEditLog(selectedDate,data);
         } else {
+            //データがない場合
             document.getElementById("training-log").innerText = "データがありません";
             displayTrainingLog(selectedDate,data);
         }
@@ -109,6 +113,7 @@ document.addEventListener("DOMContentLoaded",(event) =>{
         menuWrapper.innerHTML = "";
         let logHTML = "";
         
+        //何も選択されてないかつデータがない時
         if (!selectedDate && data.length === 0) {
             let exerciseHTML = `
                 <h3 id="exercise-name"></h3>
@@ -116,7 +121,6 @@ document.addEventListener("DOMContentLoaded",(event) =>{
                 `;
             logHTML += `<p>データがありません</p>`;
             menuWrapper.innerHTML += exerciseHTML;
-
             return;
         }else{
              //同じ名前をグループ化する
@@ -128,33 +132,32 @@ document.addEventListener("DOMContentLoaded",(event) =>{
                 return acc;
               },{});
 
-        //グループごとにHTMLを生成する
-        Object.keys(groupedData).forEach(name => {
-             let exerciseHTML = `
-                <h3 id="exercise-name" data-bind="text: exercise">${name}</h3>
-                <div class="rep-wrapper">
-                `;
-            //セットを追加できるようにする
-            groupedData[name].forEach(set => {
-                exerciseHTML += `
-               <div class="set">
-                    <span class="weight">${set.weight}kg</span> 
-                    <span class="separator">&nbsp;x&nbsp;</span>
-                    <span class="reps">${set.reps}回</span>
-                </div> `;
+            //グループごとにHTMLを生成する
+            Object.keys(groupedData).forEach(name => {
+                let exerciseHTML = `
+                    <h3 id="exercise-name" data-bind="text: exercise">${name}</h3>
+                    <div class="rep-wrapper">
+                    `;
+                //セットを追加できるようにする
+                groupedData[name].forEach(set => {
+                    exerciseHTML += `
+                <div class="set">
+                        <span class="weight">${set.weight}kg</span> 
+                        <span class="separator">&nbsp;x&nbsp;</span>
+                        <span class="reps">${set.reps}回</span>
+                    </div> `;
 
-               
-            });
-            
-            exerciseHTML += `</div>`;//rep-wrapperをとじる
-            menuWrapper.innerHTML += exerciseHTML;
-            })
-        }
+                
+                });
+                
+                exerciseHTML += `</div>`;//rep-wrapperをとじる
+                menuWrapper.innerHTML += exerciseHTML;
+                })
+            }
        
     };
     
     addClickEventToDays();
-    
     renderCalendar();
     
 
@@ -170,6 +173,7 @@ document.addEventListener("DOMContentLoaded",(event) =>{
             menuWrapper.innerHTML = "";
             let logHTML = "";
             
+            //データがない場合、そのまま表示モードにする
             if (!selectedDate && data.length === 0) {
                 let exerciseHTML = `
                     <h3 id="exercise-name"></h3>
@@ -177,18 +181,17 @@ document.addEventListener("DOMContentLoaded",(event) =>{
                     `;
                 logHTML += `<p>データがありません</p>`;
                 menuWrapper.innerHTML += exerciseHTML;
-    
                 return;
             }else{
             
-             // Formをダイナミックに作る
-            const form = document.createElement('form');
-            form.id = 'training-form';
-            form.action = "/project/public/training/update";
-            form.method = 'POST';
+                // Formをダイナミックに作る
+                const form = document.createElement('form');
+                form.id = 'training-form';
+                form.action = "/project/public/training/update";
+                form.method = 'POST';
 
-            // menuWrapperに加える
-            menuWrapper.appendChild(form);
+                // menuWrapperに加える
+                menuWrapper.appendChild(form);
 
                  //同じ名前をグループ化する
                 const groupedData = data.reduce((acc,item) => {
@@ -199,53 +202,50 @@ document.addEventListener("DOMContentLoaded",(event) =>{
                     return acc;
                   },{});
             
-             let trainingIndex = 0;
-            //グループごとにHTMLを生成する
-            Object.keys(groupedData).forEach(name => {
-                
-                let setIndex = 0;
-                 let exerciseHTML = `
-                    <input type="text" id="exercise-name" name="trainings[${trainingIndex}][name]" class="edit-exercise" value=${name} />
-                    <input type="hidden" name ="trainings_detail[${trainingIndex}][date]" value = "${date}" />
-                    <input type="hidden" name ="trainings_detail[${trainingIndex}][category]" value = "${category}" />
-                    <input type="hidden" name ="trainings[${trainingIndex}][date]" value = "${date}" />
-                    <input type="hidden" name ="trainings[${trainingIndex}][category]" value = "${category}" />
+                let trainingIndex = 0;
+                //グループごとにHTMLを生成する
+                Object.keys(groupedData).forEach(name => {
                     
-                    <div class="rep-wrapper">
+                    let setIndex = 0;
+                    let exerciseHTML = `
+                        <input type="text" id="exercise-name" name="trainings[${trainingIndex}][name]" class="edit-exercise" value=${name} />
+                        <input type="hidden" name ="trainings_detail[${trainingIndex}][date]" value = "${date}" />
+                        <input type="hidden" name ="trainings_detail[${trainingIndex}][category]" value = "${category}" />
+                        <input type="hidden" name ="trainings[${trainingIndex}][date]" value = "${date}" />
+                        <input type="hidden" name ="trainings[${trainingIndex}][category]" value = "${category}" />
+                        
+                        <div class="rep-wrapper">
+                        `;
+                    //セットを追加できるようにする
+                    groupedData[name].forEach(set => {
+                        exerciseHTML += `
+                        <div class="set">
+                            <input type="number" class ="edit-weight" name="trainings_detail[${trainingIndex}][sets][${setIndex}][weight]" value= "${set.weight}" /> kg
+                            <span class="separator">&nbsp;x &nbsp;</span>
+                        <input type="number" class ="edit-rep" name="trainings_detail[${trainingIndex}][sets][${setIndex}][reps]" value= "${set.reps}"  />回
+                        </div> `;
+        
+                    setIndex++;
+                    });
+                    
+                    exerciseHTML += `</div>`;//rep-wrapperをとじる
+                    form.innerHTML += exerciseHTML;
+                    
+                    trainingIndex++;
+                });
+                    //編集モードの時保存とキャンセルボタンをダイナミックに表示させる
+                    form.innerHTML +=
+                    `
+                    <hr class ="custom-divider">
+                    <button type="submit" class="log_save" >保存</button>
+                    <button type="button" class="log_cancel" >キャンセル</button>
+                    <hr class ="custom-divider">
                     `;
-                //セットを追加できるようにする
-                groupedData[name].forEach(set => {
-                    exerciseHTML += `
-                   <div class="set">
-                        <input type="number" class ="edit-weight" name="trainings_detail[${trainingIndex}][sets][${setIndex}][weight]" value= "${set.weight}" /> kg
-                        <span class="separator">&nbsp;x &nbsp;</span>
-                       <input type="number" class ="edit-rep" name="trainings_detail[${trainingIndex}][sets][${setIndex}][reps]" value= "${set.reps}"  />回
-                    </div> `;
-    
-                   setIndex++;
-                });
-                
-                exerciseHTML += `</div>`;//rep-wrapperをとじる
-                form.innerHTML += exerciseHTML;
-                
-                trainingIndex++;
-                });
-                form.innerHTML +=
-                `
-                <hr class ="custom-divider">
-                <button type="submit" class="log_save" >保存</button>
-                 <button type="button" class="log_cancel" >キャンセル</button>
-                 <hr class ="custom-divider">
-                 `;
             }
 
             document.querySelector(".log_cancel").addEventListener("click", function() {
                 displayTrainingLog(selectedDate, data); 
             });
-
-            
-    
-
         });
   
         
@@ -273,7 +273,6 @@ document.addEventListener("DOMContentLoaded",(event) =>{
            
         .then(data => {
             const uniqueDates = new Set(data.entries.map(entry => entry.date));
-
             console.log("Monthly count:", data.count);
             document.querySelector(".counter").innerText = `${data.count}回`;
 
@@ -393,13 +392,12 @@ document.addEventListener("DOMContentLoaded",(event) =>{
 
     }
 
+    //削除ボタンが選択されると、ログにある記録を選択される
     document.querySelector(".log_delete").addEventListener("click", (event) => {
         let formattedDate = getFormattedDateFromDateLog();
         if(formattedDate){
             deleteWorkout(formattedDate);
         }        
     });
-
-     
-    });
+});
     
