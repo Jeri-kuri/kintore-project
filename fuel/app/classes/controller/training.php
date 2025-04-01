@@ -13,6 +13,8 @@ class Controller_Training extends Controller
     public function action_save()
     {
         if (Input::method() == 'POST') {
+
+
             //フロントエンドからインプットを取得する
             $trainings = Input::post('trainings');
             $trainings_detail = Input::post('trainings_detail');
@@ -60,6 +62,9 @@ class Controller_Training extends Controller
     public function action_delete()
     {
         if(Input::method() == 'POST'){
+
+          
+
             $date = Input::post('date');
 
             //指定された日付のトレーニングデータを取得

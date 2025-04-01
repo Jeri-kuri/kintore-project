@@ -28,6 +28,7 @@
         <!--ユーザーが設定したゴールを記入、編集フォーム-->
         <div class="goal-container">
             <form action="<?php echo Uri::create('goal'); ?>" method="POST" class="goal-form">
+                <input type="hidden" name="fuel_csrf_token" value="<?php echo Security::fetch_token(); ?>" />
                 <h1>目標:</h1>
                 <input type="text" class="input-box" name="goal" id="goal" 
                     value="<?php echo isset($latest_goal['goal']) ? $latest_goal['goal'] : ''; ?>" required>

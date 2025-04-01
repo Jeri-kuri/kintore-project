@@ -20,7 +20,6 @@ class Controller_Login extends Controller
         //ユーザがフォームを送信した場合
         if(Input::method() == 'POST'){
 
-
             //ユーザーのインプットを取得
             $username = \Input::post('username');
             $password = \Input::post('password');
@@ -34,7 +33,6 @@ class Controller_Login extends Controller
             if(count($query) > 0){
                 $user = $query ->current();
                 
-
                 //パスワードをハッシュと比較して検証する
                 if(password_verify($password,$user['password'])){
                     //セッションにユーザーの情報を保存する
