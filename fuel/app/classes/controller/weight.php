@@ -26,6 +26,7 @@ class Controller_Weight extends Controller
 
         //フォームが送信された時の処理
         if (Input::method() == 'POST') {
+
             // 入力された情報を受け取る
             $weight = Input::post('user_weight');
             
@@ -52,7 +53,7 @@ class Controller_Weight extends Controller
 
        // 最新のゴールをviewにパスする
        $view = View::forge('goal/index', [
-        'latest_weight' => $latest_weight ,
+        'latest_weight' => $latest_weight,
         'latest_goal' => $latest_goal
     ]);
        return $view;

@@ -15,13 +15,14 @@
     <!--ログインフォーム-->
     <div class="container">
       <div class="login form">
-        <form action="<?php echo Uri::create('login/index'); ?>" method="POST"> <!--フォームの送信先-->
+        <!--Form::open()でCSRF tokenを自動的に加える-->
+        <?php echo Form::open(array('action' => Uri::create('login/index'),'method' =>'post'))?>
           <h3>ユーザーネーム</h3>
           <input type="text" name="username" required>
           <h3>パスワード</h3>
           <input type="password" name="password" required>
           <input type="submit" class="button" value="ログイン">
-       </form>
+       <?php echo Form::close(); ?>
      </div>
     </div>
     

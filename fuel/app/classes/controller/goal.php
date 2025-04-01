@@ -9,6 +9,30 @@ class Controller_Goal extends Controller
      */
     public function action_add_goal()
     {   
+       // if (!Session::get('fuel_csrf_token')) {
+         //   Session::set('fuel_csrf_token', Security::generate_token());
+        //}
+
+        if (!Session::instance()) {
+            echo "Session is not initialized.";
+        } else {
+            echo "Session is active.";
+        }
+
+        $csrf_token = Session::get('fuel_csrf_token');
+if ($csrf_token !== null) {
+    echo "CSRF Token exists: " . htmlspecialchars($csrf_token);
+} else {
+    echo "CSRF Token is missing.";
+}   
+        
+        if (Session::get('fuel_csrf_token') !== null) {
+            echo "Session is active, and CSRF token exists.";
+        } else {
+            echo "Session might not be started, or CSRF token is missing.";
+            var_dump(Session::get('fuel_csrf_token')); // Check only the CSRF token
+        }
+
         //最新のデータを取得
         $latest_weight = Model_GoalWeight::get_latest_weight();
 
@@ -22,6 +46,7 @@ class Controller_Goal extends Controller
 
          //フォームが送信された時の処理
         if (Input::method() == 'POST') {
+
             // 入力された情報を受け取る
             $goal = Input::post('goal');
             

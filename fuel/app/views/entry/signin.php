@@ -17,13 +17,14 @@
       <input type="checkbox" id="check">
       <div class="login form">
         <!--サインインフォーム-->
-        <form action="<?php echo Uri::create('signin/create'); ?>" method="POST">
+        <!--Form::open()でCSRF tokenを自動的に加える-->
+        <?php echo Form::open(array('action' => Uri::create('signin/create'),'method' =>'post'))?>
           <h3>ユーザーネーム</h3>
           <input type="text" name="username" required>
           <h3>パスワード</h3>
           <input type="password" name="password" required>
           <input type="submit" class="button" value="登録">
-        </form>
+        <?php echo Form::close(); ?>
       </div> 
     </div>
     <!--ログインページへのリンク-->

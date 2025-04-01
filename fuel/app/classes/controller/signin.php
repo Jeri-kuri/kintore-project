@@ -27,6 +27,7 @@ class Controller_Signin extends Controller
     public function action_create()
     {
         if(Input::method() == 'POST'){
+
             //ユーザーのインプットを取得
             $username = Input::post('username');
             $password = Input::post('password');
