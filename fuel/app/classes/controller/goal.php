@@ -32,7 +32,16 @@ class Controller_Goal extends Controller
         //フォームが送信された時の処理
         if (Input::method() == 'POST') {
             try {
-                // CSRF validation is handled automatically by FuelPHP
+                // CSRFトークンの検証
+                $token = Input::post('fuel_csrf_token');
+                $stored_token = Security::fetch_token();
+                
+
+                // トークンの検証
+                if (!$token || $token !== $stored_token) {
+                    throw new \SecurityException('Invalid CSRF token');
+                }
+
                 // 入力された情報を受け取る
                 $goal = Input::post('goal');
                 
@@ -54,6 +63,11 @@ class Controller_Goal extends Controller
                 // CSRF validation failed
                 Log::error('CSRF Validation Failed: ' . $e->getMessage());
                 Session::set_flash('error', 'セッションが切れました。もう一度お試しください。');
+                Response::redirect('goal');
+            } catch (\Exception $e) {
+                // その他のエラー
+                Log::error('Goal Addition Failed: ' . $e->getMessage());
+                Session::set_flash('error', 'エラーが発生しました。もう一度お試しください。');
                 Response::redirect('goal');
             }
         }

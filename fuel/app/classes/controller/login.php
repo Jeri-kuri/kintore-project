@@ -32,6 +32,16 @@ class Controller_Login extends Controller
         //ユーザがフォームを送信した場合
         if(Input::method() == 'POST'){
             try {
+
+                // CSRFトークンの検証
+                $token = Input::post('fuel_csrf_token');
+                $stored_token = Security::fetch_token();
+
+                 // トークンの検証
+                 if (!$token || $token !== $stored_token) {
+                    throw new \SecurityException('Invalid CSRF token');
+                }
+
                 //ユーザーのインプットを取得
                 $username = Input::post('username');
                 $password = Input::post('password');
