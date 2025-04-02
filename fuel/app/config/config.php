@@ -142,19 +142,19 @@ return array(
 	 *  The default language.
 	 */
 
-	// 'language' => 'en',
+	 'language' => 'ja',//日本語
 
 	/**
 	 *  Fallback language when file isn't available for default language.
 	 */
 
-	// 'language_fallback' => 'en',
+	 'language_fallback' => 'en',//英語
 
 	/**
 	 *  PHP set_locale() setting. Use null to not set.
 	 */
 
-	// 'locale' => 'en_US',
+	 'locale' => 'ja_JP',//日本語
 
 	/**
 	 * -------------------------------------------------------------------------
@@ -162,7 +162,7 @@ return array(
 	 * -------------------------------------------------------------------------
 	 */
 
-	// 'encoding' => 'UTF-8',
+	 'encoding' => 'UTF-8',//UTF-8
 
 	/**
 	 * -------------------------------------------------------------------------
@@ -217,8 +217,8 @@ return array(
 
 		//'csrf_autoload'            => true, 
 		//'csrf_autoload_methods'    => array('post', 'put', 'delete'),
-		'csrf_bad_request_on_fail' => true, //it will throw an HttpBadRequestException if it fails
-		//'csrf_auto_token'          => true, //Form::open() could be used
+		//'csrf_bad_request_on_fail' => true, //it will throw an HttpBadRequestException if it fails
+		'csrf_auto_token'          => true, //Form::open() could be used
 		//'csrf_token_key'           => 'fuel_csrf_token',
 		'csrf_expiration'          => 0,
 

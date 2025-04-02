@@ -1,10 +1,23 @@
 <?php
 
 use Fuel\Core\Response;
-
+use Fuel\Core\Cookie;
+use Fuel\Core\HttpException;
+use Fuel\Core\Security;
+use Fuel\Core\ForbiddenHttpException;
 
 class Controller_Login extends Controller
 {
+
+    public function before()
+    {
+        parent::before();
+        
+        $csrf_token = Security::fetch_token();
+        $expiration_time = 60*60*24*30;
+        Cookie::set('fuel_csrf_token', $csrf_token, $expiration_time);
+    }
+
     /**
      * Summary of action_index
      * @return Response
@@ -15,39 +28,41 @@ class Controller_Login extends Controller
      * パスワードを検証し、正しければ作成してリダイレクトする
      */
     public function action_index()
-    {
-
+    {   
         //ユーザがフォームを送信した場合
         if(Input::method() == 'POST'){
+            try {
+                //ユーザーのインプットを取得
+                $username = Input::post('username');
+                $password = Input::post('password');
 
-            //ユーザーのインプットを取得
-            $username = \Input::post('username');
-            $password = \Input::post('password');
+                //DBからユーザーを探す
+                $query = DB::query("SELECT * FROM users WHERE username = :username")
+                    ->parameters(array('username' => $username))
+                    ->execute();
 
-            //DBからユーザーを探す
-            $query = DB::query("SELECT * FROM users WHERE username = :username")
-            ->parameters(array('username' => $username))
-            ->execute();
-
-            //見つかった場合
-            if(count($query) > 0){
-                $user = $query ->current();
-                
-                //パスワードをハッシュと比較して検証する
-                if(password_verify($password,$user['password'])){
-                    //セッションにユーザーの情報を保存する
-                    \Session::set('id',$user['id']);
-                    \Session::set('username', $user['username']); 
-                  
-                    //ログイン成功したらweightページにリダイレクトする
-                    \Response::redirect('weight');
+                //見つかった場合
+                if(count($query) > 0){
+                    $user = $query->current();
+                    
+                    //パスワードをハッシュと比較して検証する
+                    if(password_verify($password,$user['password'])){
+                        //セッションにユーザーの情報を保存する
+                        Session::set('id', $user['id']);
+                        Session::set('username', $user['username']); 
+                        Session::set('logged_in', true);
+                      
+                        //ログイン成功したらweightページにリダイレクトする
+                        Response::redirect('weight');
+                    }else{
+                        Session::set_flash('error','Invalid password');
+                    }
                 }else{
-                    \Session::set_flash('error','Invalid password');
+                    Session::set_flash('error', 'User not found');
                 }
-            }else{
-                \Session::set_flash('error', 'User not found');
+            } catch (\SecurityException $e) {
+                Session::set_flash('error', 'セッションが切れました。もう一度お試しください。');
             }
-
         }
         //見つからなかった時ログインのviewを表示する
         return Response::forge(View::forge('entry/login'));
@@ -62,14 +77,16 @@ class Controller_Login extends Controller
     public function action_logout()
     {   
         //セッション情報を削除する
-        \Session::delete('id');
-        \Session::delete('username');
-        \Session::destroy();
+        Session::delete('id');
+        Session::delete('username');
+        Session::delete('logged_in');
+        Session::delete('fuel_csrf_token');
+        Session::destroy();
 
         //セッションIDを保持するクッキーを削除
-        \Cookie::delete('fuelcid'); 
+        Cookie::delete('fuelcid'); 
 
-        //ログアウト後にログインーエジにリダイレクト
-        \Response::redirect('login');
+        //ログアウト後にログインページにリダイレクト
+        Response::redirect('login');
     }
 }
