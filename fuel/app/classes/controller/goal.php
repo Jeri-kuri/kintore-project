@@ -5,11 +5,18 @@ class Controller_Goal extends Controller
     public function before()
     {
         parent::before();
-        
-        $csrf_token = Security::fetch_token();
+        //CSRFトークンの検証
+        if(!Security::check_token()){
+            throw new \SecurityException('Invalid CSRF token');
+        }
+        //CSRFトークンを取得
+        $this->csrf_token = Security::fetch_token();
+
+        //CSRFトークンをCookieに保存
         $expiration_time = 60*60*24*30;
-        Cookie::set('fuel_csrf_token', $csrf_token, $expiration_time);
+        Cookie::set('fuel_csrf_token', $this->csrf_token, $expiration_time);
     }
+
 
     /**
      * Summary of action_add_goal
@@ -32,16 +39,6 @@ class Controller_Goal extends Controller
         //フォームが送信された時の処理
         if (Input::method() == 'POST') {
             try {
-                // CSRFトークンの検証
-                $token = Input::post('fuel_csrf_token');
-                $stored_token = Security::fetch_token();
-                
-
-                // トークンの検証
-                if (!$token || $token !== $stored_token) {
-                    throw new \SecurityException('Invalid CSRF token');
-                }
-
                 // 入力された情報を受け取る
                 $goal = Input::post('goal');
                 
@@ -73,7 +70,8 @@ class Controller_Goal extends Controller
         }
 
         // 最新のゴールをviewにパスする
-        $view = View::forge('goal/index', ['latest_goal' => $latest_goal,'latest_weight' => $latest_weight ,]);
+        //ビューにCSRFトークンを渡す
+        $view = View::forge('goal/index', ['latest_goal' => $latest_goal,'latest_weight' => $latest_weight , 'csrf_token' => $this->csrf_token]);
         return $view;
     }
 }
